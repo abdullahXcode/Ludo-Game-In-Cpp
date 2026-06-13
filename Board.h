@@ -35,6 +35,7 @@ public:
     bool movePiece(Piece* piece, int diceValue);
     void capturePiece(int cellNum, int playerID);
     bool checkWinner(Piece* piece);
+    void captureOpponentPieces(Piece* piece, int cellID);
 
     void showBoard();
     void showMainBoard();

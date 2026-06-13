@@ -18,6 +18,7 @@ private:
     bool isHomeZone;
 
 public:
+    Cell();
     Cell(int x, int y);
 
     static void resetCellCount();

@@ -64,6 +64,32 @@ void Board::markSafeZones()
 
     cout << "Safe zones marked at : 0, 9, 18, 27, 36, 45" << endl;
 }
+void Board::captureOpponentPieces(Piece* piece, int cellID)
+{
+    if (piece == nullptr)
+        return;
+
+    Cell* cell = getMainCell(cellID);
+    if (cell == nullptr || cell->getIsSafeZone())
+        return;
+
+    int playerID = piece->getPlayerID();
+    int occupiedBy = cell->getOccupiedByPlayerID();
+
+    if (occupiedBy != -1 && occupiedBy != playerID)
+    {
+        for (int p = 0; p < 4; p++)
+        {
+            Piece* opponentPiece = getPiece(occupiedBy, p);
+            if (opponentPiece && opponentPiece->getCurrentCellID() == cellID)
+            {
+                opponentPiece->capture();
+                cout << "Player " << playerID << " captured opponent piece!" << endl;
+                return;
+            }
+        }
+    }
+}
 
 ////////////////////////////////////// GETTERS //////////////////////////////////////////
 

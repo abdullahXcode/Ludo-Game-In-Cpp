@@ -3,7 +3,10 @@
 int Cell::cellCount = 0;
 
 ////////////////////////////////////// Constructor //////////////////////////////////////////
-
+Cell::Cell() : Cell(0, 0)
+{
+    // Calling the main constructor with (0, 0)
+}
 Cell::Cell(int x, int y)
 {
     cellID = cellCount++;
@@ -24,10 +27,6 @@ int Cell::getCellID() const
 int Cell::getXPosition() const
 {
     return xPosition;
-}
-int Cell::getYPosition() const
-{
-    return yPosition;
 }
 int Cell::getYPosition() const
 {
