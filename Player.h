@@ -26,6 +26,7 @@ public:
     int getFinishedPieces() const;
     bool getIsCurrentTurn() const;
     Piece* getPiece(int pieceNum);
+    int getDiceValue() const;
 
     void setPlayerName(MyStr name);
     void setPieceColor(MyStr color);

@@ -56,7 +56,10 @@ Piece* Player::getPiece(int pieceNum)
 
     return pieces[pieceNum];
 }
-
+int Player::getDiceValue() const
+{
+    return dice.getDiceValue();
+}
 ////////////////////////////////////// SETTERS //////////////////////////////////////////
 
 void Player::setPlayerName(MyStr name)
