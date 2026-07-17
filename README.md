@@ -368,8 +368,8 @@ For issues, questions, or suggestions:
 
 ```bash
 # Clone, build, and run
-git clone https://github.com/yourusername/ludo-game.git
-cd ludo-game
+git clone https://github.com/abdullahXcode/Ludo-Game-In-Cpp.git
+cd Ludo-Game-In-Cpp
 # Open in Visual Studio and run
 ```
 
