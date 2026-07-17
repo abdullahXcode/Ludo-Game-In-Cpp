@@ -1,2 +1,0 @@
-# Ludo-Game-In-Cpp
-

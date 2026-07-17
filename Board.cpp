@@ -164,74 +164,73 @@ bool Board::canPieceMove(Piece* piece, int diceValue)
 
     return true;
 }
-bool Board::movePiece(Piece* piece, int diceValue)
-{
-    if (!canPieceMove(piece, diceValue))
-        return false;
-
-    int currentDistance = piece->getDistanceMoved();
-    int newDistance = currentDistance + diceValue;
-
-    if (newDistance > 60)
-    {
-        cout << "Cannot move! Would overshoot finish!" << endl;
-        return false;
-    }
-
-    if (piece->getStatus() == IN_HOME && diceValue == 6)
-    {
-        piece->setStatus(IN_PLAY);
-        piece->setDistanceMoved(1);
-        piece->setCurrentCellID(0);
-        cout << "Piece enters board at cell 0 !" << endl;
-        return true;
-    }
-
-    if (newDistance <= 52)
-    {
-        piece->setDistanceMoved(newDistance);
-        piece->setCurrentCellID(newDistance - 1);
-
-        if (isSafeZone(newDistance - 1))
-        {
-            piece->setStatus(IN_SAFE);
-            cout << "Piece moved to safe zone !" << endl;
-        }
-        else
-        {
-            piece->setStatus(IN_PLAY);
-        }
-
-        return true;
-    }
-
-    if (newDistance > 52 && newDistance <= 60)
-    {
-        piece->setDistanceMoved(newDistance);
-
-        int homePosition = newDistance - 53;
-        piece->setCurrentCellID(-1);
-        piece->setStatus(IN_SAFE);
-
-        cout << "Piece entered home path at position " << homePosition << endl;
-
-        if (newDistance == 60)
-        {
-            piece->setStatus(IN_FINISH);
-            cout << "PIECE FINISHED!!!" << endl;
-        }
-
-        return true;
-    }
-
-    return false;
-}
+//bool Board::movePiece(Piece* piece, int diceValue)
+//{
+//    if (!canPieceMove(piece, diceValue))
+//        return false;
+//
+//    int currentDistance = piece->getDistanceMoved();
+//    int newDistance = currentDistance + diceValue;
+//
+//    if (newDistance > 60)
+//    {
+//        cout << "Cannot move! Would overshoot finish!" << endl;
+//        return false;
+//    }
+//
+//    if (piece->getStatus() == IN_HOME && diceValue == 6)
+//    {
+//        piece->setStatus(IN_PLAY);
+//        piece->setDistanceMoved(1);
+//        piece->setCurrentCellID(0);
+//        cout << "Piece enters board at cell 0 !" << endl;
+//        return true;
+//    }
+//
+//    if (newDistance <= 52)
+//    {
+//        piece->setDistanceMoved(newDistance);
+//        piece->setCurrentCellID(newDistance - 1);
+//
+//        if (isSafeZone(newDistance - 1))
+//        {
+//            piece->setStatus(IN_SAFE);
+//            cout << "Piece moved to safe zone !" << endl;
+//        }
+//        else
+//        {
+//            piece->setStatus(IN_PLAY);
+//        }
+//
+//        return true;
+//    }
+//
+//    if (newDistance > 52 && newDistance <= 60)
+//    {
+//        piece->setDistanceMoved(newDistance);
+//
+//        int homePosition = newDistance - 53;
+//        piece->setCurrentCellID(-1);
+//        piece->setStatus(IN_SAFE);
+//
+//        cout << "Piece entered home path at position " << homePosition << endl;
+//
+//        if (newDistance == 60)
+//        {
+//            piece->setStatus(IN_FINISH);
+//            cout << "PIECE FINISHED!!!" << endl;
+//        }
+//
+//        return true;
+//    }
+//
+//    return false;
+//}
 void Board::capturePiece(int cellNum, int playerID)
 {
     if (isSafeZone(cellNum))
     {
-        cout << "Cannot capture! Safe zone!" << endl;
-        return;
+        return;  // Silent return - safe zones are protected
     }
 
     for (int otherPlayer = 0; otherPlayer < 4; otherPlayer++)
@@ -312,6 +311,96 @@ void Board::showAllPieces()
             }
         }
     }
+}
+int Board::getGlobalCellID(int playerID, int distanceMoved)
+{
+    int startOffset[4] = { 0, 34, 24, 12 }; // Red, Green, Yellow, Blue start points on the 52-cell loop
+    return (startOffset[playerID] + distanceMoved - 1) % 52;
+}
+
+bool Board::movePiece(Piece* piece, int diceValue)
+{
+    if (!canPieceMove(piece, diceValue))
+        return false;
+
+    int playerID = piece->getPlayerID();
+    int currentDistance = piece->getDistanceMoved();
+    int newDistance = currentDistance + diceValue;
+
+    if (newDistance > 60)
+    {
+        cout << "Cannot move! Would overshoot finish!" << endl;
+        return false;
+    }
+
+    if (piece->getStatus() == IN_HOME && diceValue == 6)
+    {
+        int globalCell = getGlobalCellID(playerID, 1);
+
+        capturePiece(globalCell, playerID);
+
+        piece->setStatus(IN_PLAY);
+        piece->setDistanceMoved(1);
+        piece->setCurrentCellID(globalCell);
+
+        getMainCell(globalCell)->setOccupied(true, playerID);
+
+        cout << "Piece enters board at cell " << globalCell << " !" << endl;
+        return true;
+    }
+
+    if (newDistance <= 52)
+    {
+        int oldCellID = piece->getCurrentCellID();
+        if (oldCellID != -1)
+            getMainCell(oldCellID)->clearCell();
+
+        int globalCell = getGlobalCellID(playerID, newDistance);
+
+        capturePiece(globalCell, playerID);
+
+        piece->setDistanceMoved(newDistance);
+        piece->setCurrentCellID(globalCell);
+
+        getMainCell(globalCell)->setOccupied(true, playerID);
+
+        if (isSafeZone(globalCell))
+        {
+            piece->setStatus(IN_SAFE);
+            cout << "Piece moved to safe zone !" << endl;
+        }
+        else
+        {
+            piece->setStatus(IN_PLAY);
+        }
+
+        return true;
+    }
+
+    if (newDistance > 52 && newDistance <= 60)
+    {
+        int oldCellID = piece->getCurrentCellID();
+        if (oldCellID != -1)
+            getMainCell(oldCellID)->clearCell();
+
+        piece->setDistanceMoved(newDistance);
+
+        int homePosition = newDistance - 53;
+        piece->setCurrentCellID(-1);
+        piece->setStatus(IN_SAFE);
+
+        cout << "Piece entered home path at position " << homePosition << endl;
+
+        if (newDistance == 60)
+        {
+            piece->setStatus(IN_FINISH);
+            cout << "PIECE FINISHED!!!" << endl;
+        }
+
+        return true;
+    }
+
+    return false;
 }
 void Board::showBoard()
 {

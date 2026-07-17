@@ -9,7 +9,7 @@ using namespace std;
 class Board
 {
 private:
-    Cell mainBoard[50];
+    Cell mainBoard[52];
     Cell homePath[4][8];
     Piece* pieces[4][4];
 
@@ -32,6 +32,7 @@ public:
     bool isSafeZone(int cellNum);
 
     bool canPieceMove(Piece* piece, int diceValue);
+    int getGlobalCellID(int playerID, int distanceMoved);
     bool movePiece(Piece* piece, int diceValue);
     void capturePiece(int cellNum, int playerID);
     bool checkWinner(Piece* piece);

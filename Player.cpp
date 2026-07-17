@@ -60,6 +60,7 @@ int Player::getDiceValue() const
 {
     return dice.getDiceValue();
 }
+
 ////////////////////////////////////// SETTERS //////////////////////////////////////////
 
 void Player::setPlayerName(MyStr name)

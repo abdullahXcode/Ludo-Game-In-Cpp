@@ -8,7 +8,7 @@ using namespace std;
 
 class Player
 {
-protected:
+public:
     int playerID;
     MyStr playerName;
     MyStr pieceColor;

@@ -7,7 +7,7 @@ Dice::Dice()
 	diceValue = 0;
 	consecutiveSixes = 0;
 	canRollAgain = false;
-	srand(time(0));
+	srand((unsigned)time(0));
 }
 
 ////////////////////////////////////// ROLL FUNCTION //////////////////////////////////////////

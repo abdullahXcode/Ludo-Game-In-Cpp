@@ -5,7 +5,7 @@ int Cell::cellCount = 0;
 ////////////////////////////////////// Constructor //////////////////////////////////////////
 Cell::Cell() : Cell(0, 0)
 {
-    // Calling the main constructor with (0, 0)
+    // Calls the main constructor with (0, 0)
 }
 Cell::Cell(int x, int y)
 {
