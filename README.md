@@ -82,8 +82,8 @@ A fully functional **Ludo board game** built with **Object-Oriented C++** and **
 
 ### Step 1: Clone the Repository
 ```bash
-git clone https://github.com/yourusername/ludo-game.git
-cd ludo-game
+git clone https://github.com/abdullahXcode/Ludo-Game-In-Cpp.git
+cd Ludo-Game-In-Cpp
 ```
 
 ### Step 2: Open in Visual Studio
